@@ -57,6 +57,9 @@
             this.GoogleMap.TabIndex = 0;
             this.GoogleMap.Zoom = 0D;
             this.GoogleMap.Load += new System.EventHandler(this.GoogleMap_Load);
+            this.GoogleMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GoogleMap_MouseDown);
+            this.GoogleMap.MouseMove += new System.Windows.Forms.MouseEventHandler(this.GoogleMap_MouseMove);
+            this.GoogleMap.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GoogleMap_MouseUp);
             // 
             // Form1
             // 
