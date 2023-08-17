@@ -23,6 +23,7 @@ namespace TestWorkA
     {
         private GMapMarker _selectedMarker;
         private List<Technic> _technics;
+        private Technic _selectedTechnic;
 
         public Form1()
         {
@@ -31,6 +32,8 @@ namespace TestWorkA
         private void Form1_Load(object sender, EventArgs e)
         {
             _technics = TechnicsTransaction.GetAllTechnics();
+
+            SetAllTechnicMarkers();
         }
         private void GoogleMap_Load(object sender, EventArgs e)
         {
@@ -45,16 +48,21 @@ namespace TestWorkA
             GoogleMap.DragButton = MouseButtons.Left;
             GoogleMap.ShowCenter = false;
             GoogleMap.ShowTileGridLines = false;
-            GMarkerGoogle gMarker = new GMarkerGoogle(new PointLatLng(60, 60), GMarkerGoogleType.red);
-            GMapOverlay gOverlay = new GMapOverlay("Name");
-            gOverlay.Markers.Add(gMarker);
-            GoogleMap.Overlays.Add(gOverlay);
         }
 
         #region MoveMarker
         private void GoogleMap_MouseDown(object sender, MouseEventArgs e)
         {
-            _selectedMarker = GoogleMap.Overlays.SelectMany(m => m.Markers).FirstOrDefault(m=>m.IsMouseOver);
+            _selectedMarker = GoogleMap.Overlays.SelectMany(m => m.Markers).FirstOrDefault(m => m.IsMouseOver);
+
+            if (_selectedMarker != null)
+            {
+                _selectedTechnic = _technics.Where(m =>
+                {
+                    PointLatLng point = new PointLatLng(m.Xposition, m.Yposition);
+                    return point.Equals(_selectedMarker.Position);
+                }).FirstOrDefault();
+            }
         }
 
         private void GoogleMap_MouseMove(object sender, MouseEventArgs e)
@@ -67,7 +75,41 @@ namespace TestWorkA
             _selectedMarker.Position = latlng;
         }
 
-        private void GoogleMap_MouseUp(object sender, MouseEventArgs e) => _selectedMarker = null;
+        private void GoogleMap_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (_selectedTechnic != null)
+            {
+                if (_selectedTechnic.Xposition != _selectedMarker.Position.Lat || _selectedTechnic.Yposition != _selectedMarker.Position.Lng)
+                {
+                    _selectedTechnic.isModifide = true;
+                    _selectedTechnic.Xposition = _selectedMarker.Position.Lat;
+                    _selectedTechnic.Yposition = _selectedMarker.Position.Lng;
+                }
+            }
+            _selectedMarker = null;
+        }
         #endregion
+
+        private void SetAllTechnicMarkers()
+        {
+            if (_technics != null)
+            {
+                GMapOverlay overlay = new GMapOverlay("AllTech");
+
+                foreach (var tecnic in  _technics)
+                {
+                    GMarkerGoogle gMarker = new GMarkerGoogle(new PointLatLng(tecnic.Xposition, tecnic.Yposition), GMarkerGoogleType.red);
+                    overlay.Markers.Add(gMarker);
+                    GoogleMap.Overlays.Add(overlay);
+                }
+
+                MessageBox.Show("Successfully added");
+                return;
+            }
+
+            MessageBox.Show("Error. List of Technics are empty.");
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e) => TechnicsTransaction.SaveAllTechnics(_technics);
     }
 }

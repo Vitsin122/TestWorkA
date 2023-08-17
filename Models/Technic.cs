@@ -11,5 +11,6 @@ namespace TestWorkA.Models
         public int Id { get; set; }
         public double Xposition { get; set; }
         public double Yposition { get; set; }
+        public bool isModifide { get; set; } = false;
     }
 }
