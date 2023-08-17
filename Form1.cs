@@ -12,16 +12,25 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using GMap.NET;
+using System.Configuration;
+using System.Collections.ObjectModel;
+using TestWorkA.Models;
+using TestWorkA.SqlTransactions;
 
 namespace TestWorkA
 {
     public partial class Form1 : Form
     {
         private GMapMarker _selectedMarker;
+        private List<Technic> _technics;
 
         public Form1()
         {
             InitializeComponent();
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            _technics = TechnicsTransaction.GetAllTechnics();
         }
         private void GoogleMap_Load(object sender, EventArgs e)
         {
@@ -42,6 +51,7 @@ namespace TestWorkA
             GoogleMap.Overlays.Add(gOverlay);
         }
 
+        #region MoveMarker
         private void GoogleMap_MouseDown(object sender, MouseEventArgs e)
         {
             _selectedMarker = GoogleMap.Overlays.SelectMany(m => m.Markers).FirstOrDefault(m=>m.IsMouseOver);
@@ -58,5 +68,6 @@ namespace TestWorkA
         }
 
         private void GoogleMap_MouseUp(object sender, MouseEventArgs e) => _selectedMarker = null;
+        #endregion
     }
 }
