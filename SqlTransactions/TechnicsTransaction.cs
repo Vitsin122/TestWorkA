@@ -53,7 +53,6 @@ namespace TestWorkA.SqlTransactions
                 connection.Open();
 
                 SqlCommand cmd = new SqlCommand();
-                SqlCommand cmd1 = new SqlCommand(" ", connection);
                 cmd.Connection = connection;
 
                 try
@@ -76,6 +75,30 @@ namespace TestWorkA.SqlTransactions
                     MessageBox.Show($"Data Saving exception: {ex.Message}");
 
                     return false;
+                }
+                finally { connection.Close(); }
+            }
+        }
+        public static void UpdateOneUser(Technic tech)
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["TechnicDB"].ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = connection;
+
+                try
+                {
+                    cmd.CommandText = "UPDATE TechnicsDB.dbo.Technics SET XPosition = @Xpos, YPosition = @Ypos WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@Xpos", tech.Xposition);
+                    cmd.Parameters.AddWithValue("@Ypos", tech.Yposition);
+                    cmd.Parameters.AddWithValue("@id", tech.Id);
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Data Saving exception: {ex.Message}");
                 }
                 finally { connection.Close(); }
             }

@@ -42,11 +42,11 @@ namespace TestWorkA
             GoogleMap.MinZoom = 2;
             GoogleMap.MaxZoom = 16; 
             GoogleMap.Zoom = 4;
-            GoogleMap.Position = new PointLatLng(66.4169575018027, 94.25025752215694);
+            GoogleMap.Position = new PointLatLng(67.4169575018027, 94.25025752215694);
             GoogleMap.MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
             GoogleMap.CanDragMap = true;
             GoogleMap.DragButton = MouseButtons.Left;
-            GoogleMap.ShowCenter = false;
+            GoogleMap.ShowCenter = true;
             GoogleMap.ShowTileGridLines = false;
         }
 
@@ -84,6 +84,7 @@ namespace TestWorkA
                     _selectedTechnic.isModifide = true;
                     _selectedTechnic.Xposition = _selectedMarker.Position.Lat;
                     _selectedTechnic.Yposition = _selectedMarker.Position.Lng;
+                    TechnicsTransaction.UpdateOneUser(_selectedTechnic);
                 }
             }
             _selectedMarker = null;
@@ -110,6 +111,9 @@ namespace TestWorkA
             MessageBox.Show("Error. List of Technics are empty.");
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e) => TechnicsTransaction.SaveAllTechnics(_technics);
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //TechnicsTransaction.SaveAllTechnics(_technics);
+        }
     }
 }
