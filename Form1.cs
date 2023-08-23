@@ -87,6 +87,7 @@ namespace TestWorkA
                     TechnicsTransaction.UpdateOneUser(_selectedTechnic);
                 }
             }
+            _selectedTechnic = null;
             _selectedMarker = null;
         }
         #endregion
